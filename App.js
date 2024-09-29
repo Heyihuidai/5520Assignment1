@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import StartScreen from './screens/StartScreen';
-import ConfirmScreen from './screens/ConfirmScreen';
-import GameScreen from './screens/GameScreen';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('start');
