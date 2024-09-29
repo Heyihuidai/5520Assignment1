@@ -47,4 +47,48 @@ const StartScreen = ({ onRegister }) => {
         setIsChecked(false);
         setErrors({});
       };
-}
+
+      const handleRegister = () => {
+        if (name && email && phone && isChecked && !Object.values(errors).some(error => error)) {
+          onRegister({ name, email, phone });
+        } else {
+          Alert.alert('Invalid Input', 'Please check your inputs and try again.');
+        }
+      };
+    
+      return (
+        <Card>
+          <Input
+            label="Name"
+            value={name}
+            onChangeText={validateName}
+            error={errors.name}
+          />
+          <Input
+            label="Email"
+            value={email}
+            onChangeText={validateEmail}
+            error={errors.email}
+          />
+          <Input
+            label="Phone Number"
+            value={phone}
+            onChangeText={validatePhone}
+            error={errors.phone}
+          />
+          <Checkbox
+            label="I am not a robot"
+            value={isChecked}
+            onValueChange={setIsChecked}
+          />
+          <Button title="Reset" onPress={handleReset} />
+          <Button 
+            title="Register" 
+            onPress={handleRegister} 
+            disabled={!isChecked}
+          />
+        </Card>
+      );
+    };
+    
+    export default StartScreen;
