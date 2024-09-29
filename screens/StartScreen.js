@@ -21,5 +21,14 @@ const StartScreen = ({ onRegister }) => {
         setName(text);
       };
 
+      const validateEmail = (text) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(text)) {
+          setErrors(prev => ({ ...prev, email: 'Invalid email' }));
+        } else {
+          setErrors(prev => ({ ...prev, email: null }));
+        }
+        setEmail(text);
+      };
 
 }
