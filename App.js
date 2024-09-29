@@ -1,38 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import StartScreen from './screens/StartScreen';
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState('start');
-  const [userInfo, setUserInfo] = useState(null);
-
   const handleRegister = (info) => {
-    setUserInfo(info);
-    setCurrentScreen('confirm');
-  };
-
-  const renderScreen = () => {
-    switch (currentScreen) {
-      case 'start':
-        return <StartScreen onRegister={handleRegister} />;
-      case 'confirm':
-        return <ConfirmScreen 
-                 userInfo={userInfo}
-                 onConfirm={() => setCurrentScreen('game')}
-                 onGoBack={() => setCurrentScreen('start')}
-               />;
-      case 'game':
-        return <GameScreen 
-                 onGameOver={() => setCurrentScreen('start')}
-               />;
-      default:
-        return <StartScreen onRegister={handleRegister} />;
-    }
+    console.log('User registered:', info);
   };
 
   return (
     <View style={styles.container}>
-      {renderScreen()}
+      <StartScreen onRegister={handleRegister} />
     </View>
   );
 }
