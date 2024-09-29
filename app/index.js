@@ -8,16 +8,22 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container}>
-      <StartScreen onRegister={handleRegister} />
+    <View style={styles.background}>
+      <View style={styles.container}>
+        <StartScreen onRegister={handleRegister} />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    backgroundColor: '#e6f2ff',
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
   },
