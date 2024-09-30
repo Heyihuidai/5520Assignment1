@@ -1,38 +1,38 @@
 import React from 'react';
-import { View, Text, Modal, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import Card from '../components/Card';
 import Button from '../components/Button';
 
-const ConfirmScreen = ({ visible, userInfo, onConfirm, onGoBack }) => {
+const ConfirmScreen = ({ userData, onConfirm, onGoBack }) => {
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={visible}
-    >
-      <View style={styles.modalBackground}>
-        <Card>
-          <Text style={styles.title}>Confirm Your Information</Text>
-          <Text>Name: {userInfo.name}</Text>
-          <Text>Email: {userInfo.email}</Text>
-          <Text>Phone: {userInfo.phone}</Text>
-          
-          <View style={styles.buttonContainer}>
-            <Button title="Edit Information" onPress={onGoBack} type="reset" />
-            <Button title="Continue to Game" onPress={onConfirm} type="register" />
-          </View>
-        </Card>
-      </View>
-    </Modal>
+    <View style={styles.confirmContainer}>
+      <Card style={styles.card}>
+        <Text style={styles.title}>Confirm Your Information</Text>
+        <Text>Name: {userData.name}</Text>
+        <Text>Email: {userData.email}</Text>
+        <Text>Phone: {userData.phone}</Text>
+        <View style={styles.buttonContainer}>
+          <Button title="Edit Information" onPress={onGoBack} type="reset" />
+          <Button title="Continue to Game" onPress={onConfirm} type="register" />
+        </View>
+      </Card>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  modalBackground: {
-    flex: 1,
+  confirmContainer: {
+    ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(255,0,0,0.3)', // Red background for visibility
+  },
+  card: {
+    backgroundColor: 'white',
+    borderWidth: 4,
+    borderColor: 'blue',
+    padding: 20,
+    width: '80%',
   },
   title: {
     fontSize: 18,

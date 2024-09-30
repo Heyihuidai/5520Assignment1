@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import ConfirmScreen from './ConfirmScreen';
 import Card from '../components/Card';
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -33,7 +34,7 @@ const StartScreen = () => {
   };
 
   const validatePhone = (text) => {
-    if (text.length !== 10 || isNaN(text) || ['0', '1'].includes(text[9])) {
+    if (text.length !== 10 || isNaN(text) || ['0', '1'].includes(text[0])) {
       setErrors(prev => ({ ...prev, phone: 'Invalid phone number' }));
     } else {
       setErrors(prev => ({ ...prev, phone: null }));
@@ -51,7 +52,6 @@ const StartScreen = () => {
 
   const handleRegister = () => {
     if (isFormValid) {
-      console.log('Showing confirm screen');
       setShowConfirm(true);
     } else {
       Alert.alert('Invalid Input', 'Please check your inputs and try again.');
@@ -64,7 +64,6 @@ const StartScreen = () => {
   };
 
   const handleGoBack = () => {
-    console.log('Going back to edit information');
     setShowConfirm(false);
   };
 
@@ -72,18 +71,11 @@ const StartScreen = () => {
 
   if (showConfirm) {
     return (
-      <View style={styles.confirmContainer}>
-        <Card style={styles.card}>
-          <Text style={styles.title}>Confirm Your Information</Text>
-          <Text>Name: {name}</Text>
-          <Text>Email: {email}</Text>
-          <Text>Phone: {phone}</Text>
-          <View style={styles.buttonContainer}>
-            <Button title="Edit Information" onPress={handleGoBack} type="reset" />
-            <Button title="Continue to Game" onPress={handleConfirm} type="register" />
-          </View>
-        </Card>
-      </View>
+      <ConfirmScreen
+        userData={{ name, email, phone }}
+        onConfirm={handleConfirm}
+        onGoBack={handleGoBack}
+      />
     );
   }
 
@@ -130,24 +122,6 @@ const StartScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  confirmContainer: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255,0,0,0.3)', // Red background for visibility
-  },
-  card: {
-    backgroundColor: 'white',
-    borderWidth: 4,
-    borderColor: 'blue',
-    padding: 20,
-    width: '80%',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
