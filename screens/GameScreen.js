@@ -11,20 +11,20 @@ const generateNumber = (lastDigit) => {
 };
 
 const GameScreen = ({ lastDigit, onRestart }) => {
-  const [gameState, setGameState] = useState('initial'); // 'initial', 'playing', 'guessing', 'correct', 'gameOver'
+  const [gameState, setGameState] = useState('initial');
   const [numberToGuess, setNumberToGuess] = useState(() => generateNumber(lastDigit));
   const [attemptsLeft, setAttemptsLeft] = useState(4);
+  const [usedAttempts, setUsedAttempts] = useState(0);
   const [timeLeft, setTimeLeft] = useState(60);
   const [guess, setGuess] = useState('');
   const [hint, setHint] = useState(null);
-  const [usedAttempts, setUsedAttempts] = useState(0);
   const [gameOverReason, setGameOverReason] = useState('');
 
   useEffect(() => {
     let timer;
     if (gameState === 'playing' && timeLeft > 0) {
       timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
-    } else if (timeLeft === 0 && gameState !== 'gameOver') {
+    } else if (timeLeft === 0) {
       endGame('Time is up!');
     }
     return () => clearInterval(timer);
@@ -32,30 +32,38 @@ const GameScreen = ({ lastDigit, onRestart }) => {
 
   const startGame = () => {
     setGameState('playing');
+    setAttemptsLeft(4);
+    setUsedAttempts(0);
+    setTimeLeft(60);
+    setHint(null);
   };
 
   const handleSubmitGuess = () => {
     const guessedNumber = parseInt(guess);
-    if (isNaN(guessedNumber) || guessedNumber < 1 || guessedNumber > 100) {
-      Alert.alert('Invalid Input', 'Please enter a number between 1 and 100.');
+    if (isNaN(guessedNumber) || guessedNumber < 1 || guessedNumber > 100 || guessedNumber % lastDigit !== 0) {
+      Alert.alert('Invalid Input', `Please enter a multiple of ${lastDigit} between 1 and 100.`);
       return;
     }
 
+    const newAttemptsLeft = attemptsLeft - 1;
+    setAttemptsLeft(newAttemptsLeft);
     setUsedAttempts(prev => prev + 1);
-    setAttemptsLeft(prev => prev - 1);
 
     if (guessedNumber === numberToGuess) {
       setGameState('correct');
     } else {
-      setGameState('guessing');
       setHint(guessedNumber > numberToGuess ? 'Guess Lower' : 'Guess Higher');
-      if (attemptsLeft === 1) endGame('No attempts left!');
+      if (newAttemptsLeft === 0) {
+        endGame('No attempts left!');
+      } else {
+        setGameState('playing');
+      }
     }
     setGuess('');
   };
 
   const handleUseHint = () => {
-    setHint(`The number is a multiple of ${lastDigit}`);
+    setHint(numberToGuess <= 50 ? '1-50' : '51-100');
   };
 
   const endGame = (reason) => {
@@ -64,13 +72,13 @@ const GameScreen = ({ lastDigit, onRestart }) => {
   };
 
   const resetGame = () => {
+    setGameState('initial');
     setNumberToGuess(generateNumber(lastDigit));
     setAttemptsLeft(4);
+    setUsedAttempts(0);
     setTimeLeft(60);
     setGuess('');
     setHint(null);
-    setUsedAttempts(0);
-    setGameState('initial');
     setGameOverReason('');
   };
 
@@ -78,104 +86,138 @@ const GameScreen = ({ lastDigit, onRestart }) => {
     switch (gameState) {
       case 'initial':
         return (
-          <View>
+          <View style={styles.card}>
             <Text style={styles.instruction}>
-              You have 60 seconds and 4 attempts to guess a number that is a multiple of {lastDigit} between 1 and 100.
+              Guess a number between 1 & 100 that is multiply of {lastDigit}
             </Text>
-            <Button title="Start" onPress={startGame} type="primary" />
+            <Button title="START" onPress={startGame} style={styles.startButton} />
           </View>
         );
       case 'playing':
-      case 'guessing':
         return (
-          <View>
-            <Text>Time Left: {timeLeft} seconds</Text>
-            <Text>Attempts Left: {attemptsLeft}</Text>
-            <TextInput 
+          <View style={styles.card}>
+            <Text style={styles.timerText}>Timer: {timeLeft}s</Text>
+            <Text style={styles.attemptsText}>Attempts left: {attemptsLeft}</Text>
+            <TextInput
+              style={styles.input}
               placeholder="Enter your guess"
               value={guess}
               onChangeText={setGuess}
               keyboardType="number-pad"
-              style={styles.input}
             />
-            {hint && <Text>{hint}</Text>}
-            <Button title="Submit Guess" onPress={handleSubmitGuess} type="primary" />
-            <Button title="Use a Hint" onPress={handleUseHint} type="secondary" />
+            {hint && <Text style={styles.hintText}>Hint: {hint}</Text>}
+            <View style={styles.buttonContainer}>
+              <Button title="Use a Hint" onPress={handleUseHint} style={styles.button} />
+              <Button title="Submit guess" onPress={handleSubmitGuess} style={styles.button} />
+            </View>
           </View>
         );
       case 'correct':
         return (
-          <View>
+          <View style={styles.card}>
             <Text>Congratulations! You guessed the number!</Text>
             <Text>You used {usedAttempts} attempts</Text>
             <Image 
               source={{ uri: `https://picsum.photos/id/${numberToGuess}/100/100` }} 
               style={styles.image} 
             />
-            <Button title="New Game" onPress={resetGame} type="primary" />
+            <Button title="New Game" onPress={resetGame} style={styles.button} />
           </View>
         );
       case 'gameOver':
         return (
-          <View>
+          <View style={styles.card}>
             <Text>The game is over</Text>
             <Image 
               source={require('../assets/sad-smiley.jpg')} 
               style={styles.image} 
             />
             <Text>{gameOverReason}</Text>
-            <Button title="New Game" onPress={resetGame} type="primary" />
+            <Button title="New Game" onPress={resetGame} style={styles.button} />
           </View>
         );
     }
   };
 
   return (
-    <View style={styles.gameContainer}>
-      <View style={styles.header}>
-        <Button title="Restart" onPress={onRestart} type="reset" />
-      </View>
-      <View style={styles.card}>
-        {renderContent()}
-      </View>
+    <View style={styles.container}>
+      <Button 
+        title="Restart" 
+        onPress={onRestart}
+        style={styles.restartButton}
+      />
+      {renderContent()}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  gameContainer: {
+  container: {
     flex: 1,
     backgroundColor: '#87CEFA',
+    padding: 20,
   },
-  header: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-    zIndex: 1,
+  restartButton: {
+    alignSelf: 'flex-end',
+    backgroundColor: '#FF6347',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 5,
+    marginBottom: 20,
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: '#A9A9A9',
     borderRadius: 10,
     padding: 20,
-    margin: 20,
-    marginTop: 60,
+    alignItems: 'center',
+  },
+  instruction: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 20,
+    color: 'purple',
+  },
+  startButton: {
+    backgroundColor: 'blue',
+    paddingHorizontal: 30,
+    paddingVertical: 15,
+    borderRadius: 5,
+  },
+  timerText: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  attemptsText: {
+    fontSize: 16,
+    marginBottom: 20,
   },
   input: {
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: 'purple',
+    width: '80%',
+    textAlign: 'center',
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  hintText: {
+    marginBottom: 20,
+    color: 'blue',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+  },
+  button: {
+    backgroundColor: 'blue',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 5,
   },
   image: {
     width: 100,
     height: 100,
-    alignSelf: 'center',
     marginVertical: 10,
-  },
-  instruction: {
-    textAlign: 'center',
-    marginBottom: 20,
   },
 });
 
