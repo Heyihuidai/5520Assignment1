@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Button, Alert, Image } from 'react-native';
 import Card from '../components/Card';
 
-// Move generateNumber function outside the component and ensure it's correctly declared
 const generateNumber = (lastDigit) => {
   // Ensure lastDigit is a number and not empty
   if (!lastDigit || isNaN(lastDigit)) return 1; // Default to 1 if invalid

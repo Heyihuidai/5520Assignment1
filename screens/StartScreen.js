@@ -34,7 +34,7 @@ const StartScreen = () => {
   };
 
   const validatePhone = (text) => {
-    if (text.length !== 10 || isNaN(text) || ['0', '1'].includes(text[0])) {
+    if (text.length !== 10 || isNaN(text) || ['0', '1'].includes(text[9])) {
       setErrors(prev => ({ ...prev, phone: 'Invalid phone number' }));
     } else {
       setErrors(prev => ({ ...prev, phone: null }));
