@@ -5,6 +5,7 @@ import Card from '../components/Card';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import Checkbox from '../components/Checkbox';
+import { colors } from '../helper/Colors';
 
 const StartScreen = () => {
   const [name, setName] = useState('');
@@ -74,7 +75,7 @@ const StartScreen = () => {
   }
 
   return (
-    <Card>
+    <Card style={styles.card}>
       <Input
         label="Name"
         value={name}
@@ -116,6 +117,9 @@ const StartScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  card: {
+    backgroundColor: colors.white,
+  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

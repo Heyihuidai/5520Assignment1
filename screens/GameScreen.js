@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Alert, Image } from 'react-native';
 import Button from '../components/Button';
 import Card from '../components/Card';
+import { colors } from '../helper/Colors';
 
 const generateNumber = (lastDigit) => {
   const multiples = [];
@@ -87,7 +88,7 @@ const GameScreen = ({ lastDigit, onRestart }) => {
     switch (gameState) {
       case 'initial':
         return (
-          <Card>
+          <Card style={styles.card}>
             <Text style={styles.instruction}>
               Guess a number between 1 & 100 that is multiply of {lastDigit}
             </Text>
@@ -96,7 +97,7 @@ const GameScreen = ({ lastDigit, onRestart }) => {
         );
       case 'playing':
         return (
-          <Card>
+          <Card style={styles.card}>
             <Text style={styles.timerText}>Timer: {timeLeft}s</Text>
             <Text style={styles.attemptsText}>Attempts left: {attemptsLeft}</Text>
             <TextInput
@@ -115,9 +116,9 @@ const GameScreen = ({ lastDigit, onRestart }) => {
         );
       case 'correct':
         return (
-          <Card>
-            <Text>Congratulations! You guessed the number!</Text>
-            <Text>You used {usedAttempts} attempts</Text>
+          <Card style={styles.card}>
+            <Text style={styles.text}>Congratulations! You guessed the number!</Text>
+            <Text style={styles.text}>You used {usedAttempts} attempts</Text>
             <Image 
               source={{ uri: `https://picsum.photos/id/${numberToGuess}/100/100` }} 
               style={styles.image} 
@@ -127,13 +128,13 @@ const GameScreen = ({ lastDigit, onRestart }) => {
         );
       case 'gameOver':
         return (
-          <Card>
-            <Text>The game is over</Text>
+          <Card style={styles.card}>
+            <Text style={styles.text}>The game is over</Text>
             <Image 
               source={require('../assets/sad-smiley.jpg')} 
               style={styles.image} 
             />
-            <Text>{gameOverReason}</Text>
+            <Text style={styles.text}>{gameOverReason}</Text>
             <Button title="New Game" onPress={resetGame} type="register" />
           </Card>
         );
@@ -158,8 +159,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F0F8FF', // Light blue background
+    backgroundColor: colors.background,
     padding: 20,
+  },
+  card: {
+    backgroundColor: colors.white,
   },
   restartButton: {
     alignSelf: 'flex-end',
@@ -169,25 +173,30 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 20,
+    color: colors.text,
   },
   timerText: {
     fontSize: 16,
     marginBottom: 10,
+    color: colors.text,
   },
   attemptsText: {
     fontSize: 16,
     marginBottom: 20,
+    color: colors.text,
   },
   input: {
     borderBottomWidth: 1,
-    borderBottomColor: 'black',
+    borderBottomColor: colors.border,
     width: '80%',
     textAlign: 'center',
     fontSize: 18,
     marginBottom: 20,
+    color: colors.text,
   },
   hintText: {
     marginBottom: 20,
+    color: colors.text,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -198,6 +207,9 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     marginVertical: 10,
+  },
+  text: {
+    color: colors.text,
   },
 });
 
