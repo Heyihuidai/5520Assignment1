@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Card from '../components/Card';
 import Button from '../components/Button';
+import GameScreen from './GameScreen';
 
-const ConfirmScreen = ({ userData, onConfirm, onGoBack }) => {
+const ConfirmScreen = ({ userData, onGoBack }) => {
+  const [showGame, setShowGame] = useState(false);
+
+  const handleConfirm = () => {
+    console.log('Confirmed. Starting game...');
+    setShowGame(true);
+  };
+
+  if (showGame) {
+    return <GameScreen lastDigit={parseInt(userData.phone.slice(-1))} onRestart={() => setShowGame(false)} />;
+  }
+
   return (
     <View style={styles.confirmContainer}>
       <Card style={styles.card}>
@@ -13,7 +25,7 @@ const ConfirmScreen = ({ userData, onConfirm, onGoBack }) => {
         <Text>Phone: {userData.phone}</Text>
         <View style={styles.buttonContainer}>
           <Button title="Edit Information" onPress={onGoBack} type="reset" />
-          <Button title="Continue to Game" onPress={onConfirm} type="register" />
+          <Button title="Continue to Game" onPress={handleConfirm} type="register" />
         </View>
       </Card>
     </View>
@@ -25,12 +37,10 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,0,0,0.3)', // Red background for visibility
+    backgroundColor: 'rgba(0,0,0,0.1)',
   },
   card: {
     backgroundColor: 'white',
-    borderWidth: 4,
-    borderColor: 'blue',
     padding: 20,
     width: '80%',
   },

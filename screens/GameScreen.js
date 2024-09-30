@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Alert, Image } from 'react-native';
 import Card from '../components/Card';
+import Button from '../components/Button';
 
 const generateNumber = (lastDigit) => {
-  // Ensure lastDigit is a number and not empty
-  if (!lastDigit || isNaN(lastDigit)) return 1; // Default to 1 if invalid
-  
-  // Generate a random multiple of the last digit between 1-100
+  if (!lastDigit || isNaN(lastDigit)) return 1;
   const multiples = [];
   for (let i = lastDigit; i <= 100; i += lastDigit) {
     multiples.push(i);
@@ -15,7 +13,7 @@ const generateNumber = (lastDigit) => {
 };
 
 const GameScreen = ({ lastDigit, onRestart }) => {
-  const [numberToGuess, setNumberToGuess] = useState(() => generateNumber(lastDigit)); // Use callback to delay execution
+  const [numberToGuess, setNumberToGuess] = useState(() => generateNumber(lastDigit));
   const [attemptsLeft, setAttemptsLeft] = useState(4);
   const [timeLeft, setTimeLeft] = useState(60);
   const [guess, setGuess] = useState('');
@@ -46,6 +44,7 @@ const GameScreen = ({ lastDigit, onRestart }) => {
 
     if (guessedNumber === numberToGuess) {
       setIsGameOver(true);
+      setHint('Congratulations! You guessed the number!');
     } else {
       setAttemptsLeft(attemptsLeft - 1);
       setHint(guessedNumber > numberToGuess ? 'Guess Lower' : 'Guess Higher');
@@ -60,7 +59,7 @@ const GameScreen = ({ lastDigit, onRestart }) => {
 
   const endGame = (message) => {
     setIsGameOver(true);
-    Alert.alert('Game Over', message);
+    setHint(message);
   };
 
   const resetGame = () => {
@@ -80,18 +79,18 @@ const GameScreen = ({ lastDigit, onRestart }) => {
           <View>
             <Text>Game Over!</Text>
             <Text>{hint}</Text>
-            {guess === numberToGuess && (
+            {hint.includes('Congratulations') && (
               <Image 
                 source={{ uri: `https://picsum.photos/id/${numberToGuess}/100/100` }} 
                 style={styles.image} 
               />
             )}
-            <Button title="New Game" onPress={resetGame} />
+            <Button title="New Game" onPress={resetGame} type="primary" />
           </View>
         ) : !isGameStarted ? (
           <View>
             <Text>You have 60 seconds and 4 attempts to guess a number!</Text>
-            <Button title="Start" onPress={handleStartGame} />
+            <Button title="Start" onPress={handleStartGame} type="primary" />
           </View>
         ) : (
           <View>
@@ -105,12 +104,12 @@ const GameScreen = ({ lastDigit, onRestart }) => {
               style={styles.input}
             />
             {hint && <Text>{hint}</Text>}
-            <Button title="Submit Guess" onPress={handleSubmitGuess} />
-            <Button title="Use a Hint" onPress={handleUseHint} />
+            <Button title="Submit Guess" onPress={handleSubmitGuess} type="primary" />
+            <Button title="Use a Hint" onPress={handleUseHint} type="secondary" />
           </View>
         )}
       </Card>
-      <Button title="Restart" onPress={onRestart} />
+      <Button title="Restart" onPress={onRestart} type="reset" />
     </View>
   );
 };

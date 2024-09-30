@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import ConfirmScreen from './ConfirmScreen';
 import Card from '../components/Card';
 import Input from '../components/Input';
@@ -58,11 +58,6 @@ const StartScreen = () => {
     }
   };
 
-  const handleConfirm = () => {
-    console.log('Confirmed. Starting game...');
-    // Implement game start logic here
-  };
-
   const handleGoBack = () => {
     setShowConfirm(false);
   };
@@ -73,7 +68,6 @@ const StartScreen = () => {
     return (
       <ConfirmScreen
         userData={{ name, email, phone }}
-        onConfirm={handleConfirm}
         onGoBack={handleGoBack}
       />
     );
