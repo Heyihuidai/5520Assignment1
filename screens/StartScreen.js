@@ -1,25 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import Card from '../components/Card';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import Checkbox from '../components/Checkbox';
 
-const StartScreen = ({ onRegister, initialInfo }) => {
-  const [name, setName] = useState(initialInfo?.name || '');
-  const [email, setEmail] = useState(initialInfo?.email || '');
-  const [phone, setPhone] = useState(initialInfo?.phone || '');
+const StartScreen = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [isChecked, setIsChecked] = useState(false);
   const [errors, setErrors] = useState({});
-
-  useEffect(() => {
-    if (initialInfo) {
-      setName(initialInfo.name || '');
-      setEmail(initialInfo.email || '');
-      setPhone(initialInfo.phone || '');
-      // We don't set isChecked here as the user should reconfirm this
-    }
-  }, [initialInfo]);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const validateName = (text) => {
     if (text.length <= 1 || /\d/.test(text)) {
@@ -59,11 +51,41 @@ const StartScreen = ({ onRegister, initialInfo }) => {
 
   const handleRegister = () => {
     if (isFormValid) {
-      onRegister({ name, email, phone });
+      console.log('Showing confirm screen');
+      setShowConfirm(true);
+    } else {
+      Alert.alert('Invalid Input', 'Please check your inputs and try again.');
     }
   };
 
+  const handleConfirm = () => {
+    console.log('Confirmed. Starting game...');
+    // Implement game start logic here
+  };
+
+  const handleGoBack = () => {
+    console.log('Going back to edit information');
+    setShowConfirm(false);
+  };
+
   const isFormValid = name && email && phone && isChecked && !Object.values(errors).some(error => error);
+
+  if (showConfirm) {
+    return (
+      <View style={styles.confirmContainer}>
+        <Card style={styles.card}>
+          <Text style={styles.title}>Confirm Your Information</Text>
+          <Text>Name: {name}</Text>
+          <Text>Email: {email}</Text>
+          <Text>Phone: {phone}</Text>
+          <View style={styles.buttonContainer}>
+            <Button title="Edit Information" onPress={handleGoBack} type="reset" />
+            <Button title="Continue to Game" onPress={handleConfirm} type="register" />
+          </View>
+        </Card>
+      </View>
+    );
+  }
 
   return (
     <Card>
@@ -108,6 +130,24 @@ const StartScreen = ({ onRegister, initialInfo }) => {
 };
 
 const styles = StyleSheet.create({
+  confirmContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,0,0,0.3)', // Red background for visibility
+  },
+  card: {
+    backgroundColor: 'white',
+    borderWidth: 4,
+    borderColor: 'blue',
+    padding: 20,
+    width: '80%',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
