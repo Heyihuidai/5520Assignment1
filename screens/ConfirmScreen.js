@@ -8,12 +8,19 @@ const ConfirmScreen = ({ userData, onGoBack }) => {
   const [showGame, setShowGame] = useState(false);
 
   const handleConfirm = () => {
-    console.log('Confirmed. Starting game...');
     setShowGame(true);
   };
 
+  const handleRestart = () => {
+    setShowGame(false);
+    onGoBack();
+  };
+
+  // Extract the last digit and convert it to a number
+  const lastDigit = parseInt(userData.phone.slice(-1));
+
   if (showGame) {
-    return <GameScreen lastDigit={parseInt(userData.phone.slice(-1))} onRestart={() => setShowGame(false)} />;
+    return <GameScreen lastDigit={lastDigit} onRestart={handleRestart} />;
   }
 
   return (
@@ -34,7 +41,7 @@ const ConfirmScreen = ({ userData, onGoBack }) => {
 
 const styles = StyleSheet.create({
   confirmContainer: {
-    ...StyleSheet.absoluteFillObject,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.1)',

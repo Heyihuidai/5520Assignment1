@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Alert, Image } from 'react-native';
 import Button from '../components/Button';
+import Card from '../components/Card';
 
 const generateNumber = (lastDigit) => {
   const multiples = [];
@@ -86,16 +87,16 @@ const GameScreen = ({ lastDigit, onRestart }) => {
     switch (gameState) {
       case 'initial':
         return (
-          <View style={styles.card}>
+          <Card style={styles.card}>
             <Text style={styles.instruction}>
               Guess a number between 1 & 100 that is multiply of {lastDigit}
             </Text>
-            <Button title="START" onPress={startGame} style={styles.startButton} />
-          </View>
+            <Button title="START" onPress={startGame} type="register" />
+          </Card>
         );
       case 'playing':
         return (
-          <View style={styles.card}>
+          <Card style={styles.card}>
             <Text style={styles.timerText}>Timer: {timeLeft}s</Text>
             <Text style={styles.attemptsText}>Attempts left: {attemptsLeft}</Text>
             <TextInput
@@ -107,34 +108,34 @@ const GameScreen = ({ lastDigit, onRestart }) => {
             />
             {hint && <Text style={styles.hintText}>Hint: {hint}</Text>}
             <View style={styles.buttonContainer}>
-              <Button title="Use a Hint" onPress={handleUseHint} style={styles.button} />
-              <Button title="Submit guess" onPress={handleSubmitGuess} style={styles.button} />
+              <Button title="Use a Hint" onPress={handleUseHint} type="reset" />
+              <Button title="Submit guess" onPress={handleSubmitGuess} type="register" />
             </View>
-          </View>
+          </Card>
         );
       case 'correct':
         return (
-          <View style={styles.card}>
+          <Card style={styles.card}>
             <Text>Congratulations! You guessed the number!</Text>
             <Text>You used {usedAttempts} attempts</Text>
             <Image 
               source={{ uri: `https://picsum.photos/id/${numberToGuess}/100/100` }} 
               style={styles.image} 
             />
-            <Button title="New Game" onPress={resetGame} style={styles.button} />
-          </View>
+            <Button title="New Game" onPress={resetGame} type="register" />
+          </Card>
         );
       case 'gameOver':
         return (
-          <View style={styles.card}>
+          <Card style={styles.card}>
             <Text>The game is over</Text>
             <Image 
               source={require('../assets/sad-smiley.jpg')} 
               style={styles.image} 
             />
             <Text>{gameOverReason}</Text>
-            <Button title="New Game" onPress={resetGame} style={styles.button} />
-          </View>
+            <Button title="New Game" onPress={resetGame} type="register" />
+          </Card>
         );
     }
   };
@@ -144,6 +145,7 @@ const GameScreen = ({ lastDigit, onRestart }) => {
       <Button 
         title="Restart" 
         onPress={onRestart}
+        type="reset"
         style={styles.restartButton}
       />
       {renderContent()}
@@ -154,34 +156,24 @@ const GameScreen = ({ lastDigit, onRestart }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#87CEFA',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.1)',
     padding: 20,
   },
   restartButton: {
     alignSelf: 'flex-end',
-    backgroundColor: '#FF6347',
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 5,
     marginBottom: 20,
   },
   card: {
-    backgroundColor: '#A9A9A9',
-    borderRadius: 10,
+    backgroundColor: 'white',
     padding: 20,
-    alignItems: 'center',
+    width: '80%',
   },
   instruction: {
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 20,
-    color: 'purple',
-  },
-  startButton: {
-    backgroundColor: 'blue',
-    paddingHorizontal: 30,
-    paddingVertical: 15,
-    borderRadius: 5,
   },
   timerText: {
     fontSize: 16,
@@ -193,7 +185,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderBottomWidth: 1,
-    borderBottomColor: 'purple',
+    borderBottomColor: 'black',
     width: '80%',
     textAlign: 'center',
     fontSize: 18,
@@ -201,18 +193,11 @@ const styles = StyleSheet.create({
   },
   hintText: {
     marginBottom: 20,
-    color: 'blue',
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     width: '100%',
-  },
-  button: {
-    backgroundColor: 'blue',
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 5,
   },
   image: {
     width: 100,
