@@ -87,7 +87,7 @@ const GameScreen = ({ lastDigit, onRestart }) => {
     switch (gameState) {
       case 'initial':
         return (
-          <Card style={styles.card}>
+          <Card>
             <Text style={styles.instruction}>
               Guess a number between 1 & 100 that is multiply of {lastDigit}
             </Text>
@@ -96,7 +96,7 @@ const GameScreen = ({ lastDigit, onRestart }) => {
         );
       case 'playing':
         return (
-          <Card style={styles.card}>
+          <Card>
             <Text style={styles.timerText}>Timer: {timeLeft}s</Text>
             <Text style={styles.attemptsText}>Attempts left: {attemptsLeft}</Text>
             <TextInput
@@ -115,7 +115,7 @@ const GameScreen = ({ lastDigit, onRestart }) => {
         );
       case 'correct':
         return (
-          <Card style={styles.card}>
+          <Card>
             <Text>Congratulations! You guessed the number!</Text>
             <Text>You used {usedAttempts} attempts</Text>
             <Image 
@@ -127,7 +127,7 @@ const GameScreen = ({ lastDigit, onRestart }) => {
         );
       case 'gameOver':
         return (
-          <Card style={styles.card}>
+          <Card>
             <Text>The game is over</Text>
             <Image 
               source={require('../assets/sad-smiley.jpg')} 
@@ -158,17 +158,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.1)',
+    backgroundColor: '#F0F8FF', // Light blue background
     padding: 20,
   },
   restartButton: {
     alignSelf: 'flex-end',
     marginBottom: 20,
-  },
-  card: {
-    backgroundColor: 'white',
-    padding: 20,
-    width: '80%',
   },
   instruction: {
     fontSize: 16,

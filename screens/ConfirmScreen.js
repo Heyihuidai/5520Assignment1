@@ -25,7 +25,7 @@ const ConfirmScreen = ({ userData, onGoBack }) => {
 
   return (
     <View style={styles.confirmContainer}>
-      <Card style={styles.card}>
+      <Card>
         <Text style={styles.title}>Confirm Your Information</Text>
         <Text>Name: {userData.name}</Text>
         <Text>Email: {userData.email}</Text>
@@ -44,12 +44,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.1)',
-  },
-  card: {
-    backgroundColor: 'white',
+    backgroundColor: '#F0F8FF', // Light blue background
     padding: 20,
-    width: '80%',
   },
   title: {
     fontSize: 18,
