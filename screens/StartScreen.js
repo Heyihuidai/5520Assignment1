@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
-import { View, Text, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import Card from '../components/Card';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import Checkbox from '../components/Checkbox';
 
-const StartScreen = ({ onRegister }) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+const StartScreen = ({ onRegister, initialInfo }) => {
+  const [name, setName] = useState(initialInfo?.name || '');
+  const [email, setEmail] = useState(initialInfo?.email || '');
+  const [phone, setPhone] = useState(initialInfo?.phone || '');
   const [isChecked, setIsChecked] = useState(false);
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (initialInfo) {
+      setName(initialInfo.name || '');
+      setEmail(initialInfo.email || '');
+      setPhone(initialInfo.phone || '');
+      // We don't set isChecked here as the user should reconfirm this
+    }
+  }, [initialInfo]);
 
   const validateName = (text) => {
     if (text.length <= 1 || /\d/.test(text)) {
@@ -49,10 +58,8 @@ const StartScreen = ({ onRegister }) => {
   };
 
   const handleRegister = () => {
-    if (name && email && phone && isChecked && !Object.values(errors).some(error => error)) {
+    if (isFormValid) {
       onRegister({ name, email, phone });
-    } else {
-      Alert.alert('Invalid Input', 'Please check your inputs and try again.');
     }
   };
 
@@ -83,19 +90,29 @@ const StartScreen = ({ onRegister }) => {
         value={isChecked}
         onValueChange={setIsChecked}
       />
-      <Button 
-        title="Reset" 
-        onPress={handleReset} 
-        type="reset"
-      />
-      <Button 
-        title="Register" 
-        onPress={handleRegister} 
-        disabled={!isFormValid}
-        type="register"
-      />
+      <View style={styles.buttonContainer}>
+        <Button 
+          title="Reset" 
+          onPress={handleReset} 
+          type="reset"
+        />
+        <Button 
+          title="Register" 
+          onPress={handleRegister} 
+          disabled={!isFormValid}
+          type="register"
+        />
+      </View>
     </Card>
   );
 };
+
+const styles = StyleSheet.create({
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+});
 
 export default StartScreen;
